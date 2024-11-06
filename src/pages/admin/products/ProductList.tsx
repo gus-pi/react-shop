@@ -15,11 +15,18 @@ type Product = {
 function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const pageSize = 5;
+
   async function getProducts() {
+    const url = `http://localhost:3000/products?_sort=id&order=desc&_page=${currentPage}&_limit=${pageSize}`;
     try {
-      const res = await fetch('http://localhost:3000/products');
+      const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
+        let totalCount = res.headers.get('X-Total-Count');
+        setTotalPages(Math.ceil(totalCount / pageSize));
         setProducts(data);
       } else {
         throw new Error();
@@ -31,7 +38,7 @@ function ProductList() {
 
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [currentPage]);
 
   async function handleDelete(id: number) {
     try {
@@ -45,6 +52,29 @@ function ProductList() {
     } catch (error) {
       alert('Unable to delete the product');
     }
+  }
+
+  // pagination functionality
+  let paginationButtons = [];
+  for (let i = 1; i <= totalPages; i++) {
+    paginationButtons.push(
+      <li
+        className={i === currentPage ? 'page-item active' : 'page-item'}
+        key={i}
+      >
+        <a
+          className="page-link"
+          href={'?page=' + i}
+          onClick={(event) => {
+            event.preventDefault();
+
+            setCurrentPage(i);
+          }}
+        >
+          {i}
+        </a>
+      </li>
+    );
   }
 
   return (
@@ -117,6 +147,7 @@ function ProductList() {
           ))}
         </tbody>
       </table>
+      <ul className="pagination">{paginationButtons}</ul>
     </div>
   );
 }
