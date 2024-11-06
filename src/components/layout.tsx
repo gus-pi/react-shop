@@ -39,7 +39,7 @@ export function NavBar() {
         <NavDropdown title="Admin" id="navbarScrollingDropdown">
           <NavDropdown.Item>
             <Link
-              to="/products"
+              to="/admin/products"
               style={{ textDecoration: 'none', color: 'black' }}
             >
               Products
@@ -70,8 +70,8 @@ export function NavBar() {
 
 export function Footer() {
   return (
-    <div className="text-center p-4 border-top">
-      <img src="/icon.png" alt="icon" width={30} className="me-2" />
+    <div className="text-center p-4 border-top ">
+      <img src="/icon.png" alt="icon" width={20} /> React Store
     </div>
   );
 }
