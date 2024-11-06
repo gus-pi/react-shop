@@ -1,16 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-type Product = {
-  id: number;
-  name: string;
-  brand: string;
-  category: string;
-  price: number;
-  description: string;
-  imageFilename: string;
-  createdAt: 'string';
-};
+import { Product } from '../../../lib/types';
 
 function ProductList() {
   const [products, setProducts] = useState<Product[]>([]);
