@@ -20,9 +20,13 @@ function ProductList() {
   const pageSize = 5;
 
   const [search, setSearch] = useState('');
+  const [sortColumn, setSortColumn] = useState({
+    column: 'id',
+    orderBy: 'desc',
+  });
 
   async function getProducts() {
-    const url = `http://localhost:3000/products?_sort=id&order=desc&_page=${currentPage}&_limit=${pageSize}&q=${search}`;
+    const url = `http://localhost:3000/products?_page=${currentPage}&_limit=${pageSize}&q=${search}&_sort=${sortColumn.column}&_order=${sortColumn.orderBy}`;
     try {
       const res = await fetch(url);
       if (res.ok) {
@@ -40,7 +44,7 @@ function ProductList() {
 
   useEffect(() => {
     getProducts();
-  }, [currentPage, search]);
+  }, [currentPage, search, sortColumn]);
 
   async function handleDelete(id: number) {
     try {
@@ -88,6 +92,19 @@ function ProductList() {
     setCurrentPage(1);
   }
 
+  // sort functionality
+  function sortTable(column: string) {
+    let orderBy = 'desc';
+
+    if (column === sortColumn.column) {
+      // reverse orderBy
+      if (sortColumn.orderBy === 'asc') orderBy = 'desc';
+      else orderBy = 'asc';
+    }
+
+    setSortColumn({ column: column, orderBy: orderBy });
+  }
+
   return (
     <div className="container my-4">
       <h2 className="text-center mb-4">Products</h2>
@@ -127,13 +144,67 @@ function ProductList() {
       <table className="table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Brand</th>
-            <th>Category</th>
-            <th>Price</th>
+            <th style={{ cursor: 'pointer' }} onClick={() => sortTable('id')}>
+              ID{' '}
+              <SortArrow
+                column="id"
+                sortColumn={sortColumn.column}
+                orderBy={sortColumn.orderBy}
+              />
+            </th>
+            <th style={{ cursor: 'pointer' }} onClick={() => sortTable('name')}>
+              Name{' '}
+              <SortArrow
+                column="name"
+                sortColumn={sortColumn.column}
+                orderBy={sortColumn.orderBy}
+              />
+            </th>
+            <th
+              style={{ cursor: 'pointer' }}
+              onClick={() => sortTable('brand')}
+            >
+              Brand{' '}
+              <SortArrow
+                column="brand"
+                sortColumn={sortColumn.column}
+                orderBy={sortColumn.orderBy}
+              />
+            </th>
+            <th
+              style={{ cursor: 'pointer' }}
+              onClick={() => sortTable('category')}
+            >
+              Category{' '}
+              <SortArrow
+                column="category"
+                sortColumn={sortColumn.column}
+                orderBy={sortColumn.orderBy}
+              />
+            </th>
+            <th
+              style={{ cursor: 'pointer' }}
+              onClick={() => sortTable('price')}
+            >
+              Price{' '}
+              <SortArrow
+                column="price"
+                sortColumn={sortColumn.column}
+                orderBy={sortColumn.orderBy}
+              />
+            </th>
             <th>Image</th>
-            <th>Created At</th>
+            <th
+              style={{ cursor: 'pointer' }}
+              onClick={() => sortTable('createdAt')}
+            >
+              Created At{' '}
+              <SortArrow
+                column="createdAt"
+                sortColumn={sortColumn.column}
+                orderBy={sortColumn.orderBy}
+              />
+            </th>
             <th>Action</th>
           </tr>
         </thead>
@@ -175,6 +246,24 @@ function ProductList() {
       <ul className="pagination">{paginationButtons}</ul>
     </div>
   );
+}
+
+function SortArrow({
+  column,
+  sortColumn,
+  orderBy,
+}: {
+  column: string;
+  sortColumn: string;
+  orderBy: string;
+}) {
+  if (column !== sortColumn) return null;
+
+  if (orderBy === 'asc') {
+    return <i className="bi bi-arrow-up"></i>;
+  }
+
+  return <i className="bi bi-arrow-down"></i>;
 }
 
 export default ProductList;
