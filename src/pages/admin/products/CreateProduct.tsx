@@ -1,17 +1,62 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function CreateProduct() {
+  const [validationErrors, setValidationErrors] = useState<any>({});
+
+  const navigate = useNavigate();
+
+  async function handleSubmit(event: any) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+    const product = Object.fromEntries(formData.entries());
+
+    if (
+      !product.name ||
+      !product.brand ||
+      !product.category ||
+      !product.price ||
+      !product.description ||
+      !product.image.name
+    ) {
+      alert('Please fill all the fields!');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:3000/products', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        //Product created correctly!
+        navigate('/admin/products');
+      } else if (response.status === 400) {
+        setValidationErrors(data);
+      } else {
+        alert('Unable to create the product!');
+      }
+    } catch (error) {
+      alert('Unable to connect to the server!');
+    }
+  }
+
   return (
     <div className="container my-4">
       <div className="row">
         <div className="col-md-8 mx-auto rounded border p-4">
           <h2 className="text-center mb-5">Create Product</h2>
 
-          <form>
+          <form onSubmit={handleSubmit}>
             <div className="row mb-3">
               <label className="col-sm-4 col-form-label">Name</label>
               <div className="col-sm-8">
                 <input className="form-control" name="name" />
+                <span className="text-danger">{validationErrors.name}</span>
               </div>
             </div>
 
@@ -19,7 +64,7 @@ export default function CreateProduct() {
               <label className="col-sm-4 col-form-label">Brand</label>
               <div className="col-sm-8">
                 <input className="form-control" name="brand" />
-                <span className="text-danger"></span>
+                <span className="text-danger">{validationErrors.brand}</span>
               </div>
             </div>
 
@@ -34,7 +79,7 @@ export default function CreateProduct() {
                   <option value="Printers">Printers</option>
                   <option value="Cameras">Cameras</option>
                 </select>
-                <span className="text-danger"></span>
+                <span className="text-danger">{validationErrors.category}</span>
               </div>
             </div>
 
@@ -48,7 +93,7 @@ export default function CreateProduct() {
                   step="0.01"
                   min="1"
                 />
-                <span className="text-danger"></span>
+                <span className="text-danger">{validationErrors.price}</span>
               </div>
             </div>
 
@@ -60,7 +105,9 @@ export default function CreateProduct() {
                   name="description"
                   rows={4}
                 />
-                <span className="text-danger"></span>
+                <span className="text-danger">
+                  {validationErrors.description}
+                </span>
               </div>
             </div>
 
@@ -68,7 +115,7 @@ export default function CreateProduct() {
               <label className="col-sm-4 col-form-label">Image</label>
               <div className="col-sm-8">
                 <input className="form-control" type="file" name="image" />
-                <span className="text-danger"></span>
+                <span className="text-danger">{validationErrors.image}</span>
               </div>
             </div>
 
