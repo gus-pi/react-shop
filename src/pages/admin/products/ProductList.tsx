@@ -19,8 +19,10 @@ function ProductList() {
   const [totalPages, setTotalPages] = useState(1);
   const pageSize = 5;
 
+  const [search, setSearch] = useState('');
+
   async function getProducts() {
-    const url = `http://localhost:3000/products?_sort=id&order=desc&_page=${currentPage}&_limit=${pageSize}`;
+    const url = `http://localhost:3000/products?_sort=id&order=desc&_page=${currentPage}&_limit=${pageSize}&q=${search}`;
     try {
       const res = await fetch(url);
       if (res.ok) {
@@ -38,7 +40,7 @@ function ProductList() {
 
   useEffect(() => {
     getProducts();
-  }, [currentPage]);
+  }, [currentPage, search]);
 
   async function handleDelete(id: number) {
     try {
@@ -77,6 +79,15 @@ function ProductList() {
     );
   }
 
+  // search functionality
+  function handleSearch(event: any) {
+    event.preventDefault();
+
+    let text = event.target.search.value;
+    setSearch(text);
+    setCurrentPage(1);
+  }
+
   return (
     <div className="container my-4">
       <h2 className="text-center mb-4">Products</h2>
@@ -97,7 +108,21 @@ function ProductList() {
             Refresh
           </button>
         </div>
-        <div className="col"></div>
+        <div className="col">
+          <div className="col">
+            <form className="d-flex" onSubmit={handleSearch}>
+              <input
+                className="form-control me-2"
+                type="search"
+                placeholder="Search"
+                name="search"
+              />
+              <button className="btn btn-outline-success" type="submit">
+                Search
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
       <table className="table">
         <thead>
