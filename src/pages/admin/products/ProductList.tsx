@@ -33,6 +33,20 @@ function ProductList() {
     getProducts();
   }, []);
 
+  async function handleDelete(id: number) {
+    try {
+      const res = await fetch(`http://localhost:3000/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        throw new Error();
+      }
+      getProducts();
+    } catch (error) {
+      alert('Unable to delete the product');
+    }
+  }
+
   return (
     <div className="container my-4">
       <h2 className="text-center mb-4">Products</h2>
@@ -91,7 +105,11 @@ function ProductList() {
                 >
                   Edit
                 </Link>
-                <button type="button" className="btn btn-danger btn-sm">
+                <button
+                  type="button"
+                  className="btn btn-danger btn-sm"
+                  onClick={() => handleDelete(product.id)}
+                >
                   Delete
                 </button>
               </td>
