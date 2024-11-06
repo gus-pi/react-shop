@@ -2,13 +2,16 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { Link } from 'react-router-dom';
 
 export function NavBar() {
   return (
     <Navbar expand="lg" className="bg-white border-bottom box-shadow">
       <Container>
-        <Navbar.Brand href="#">
-          <img src="/icon.png" alt="icon" width="25" className="me-2" />
+        <Navbar.Brand>
+          <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
+            <img src="/icon.png" alt="icon" width="25" className="me-2" />
+          </Link>
           React Store
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
@@ -18,19 +21,47 @@ export function NavBar() {
             style={{ maxHeight: '100px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1" className="text-dark">
-              Home
+            <Nav.Link className="text-dark">
+              <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
+                Home
+              </Link>
             </Nav.Link>
             <Nav.Link href="#action2" className="text-dark">
-              Contact
+              <Link
+                to="/contact"
+                style={{ textDecoration: 'none', color: 'black' }}
+              >
+                Contact
+              </Link>
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
         <NavDropdown title="Admin" id="navbarScrollingDropdown">
-          <NavDropdown.Item href="#action3">Products</NavDropdown.Item>
-          <NavDropdown.Item href="#action4">Profile</NavDropdown.Item>
+          <NavDropdown.Item>
+            <Link
+              to="/products"
+              style={{ textDecoration: 'none', color: 'black' }}
+            >
+              Products
+            </Link>
+          </NavDropdown.Item>
+          <NavDropdown.Item>
+            <Link
+              to="/profile"
+              style={{ textDecoration: 'none', color: 'black' }}
+            >
+              Profile
+            </Link>
+          </NavDropdown.Item>
           <NavDropdown.Divider />
-          <NavDropdown.Item href="#action5">Logout</NavDropdown.Item>
+          <NavDropdown.Item>
+            <Link
+              to="/logout"
+              style={{ textDecoration: 'none', color: 'black' }}
+            >
+              Logout
+            </Link>
+          </NavDropdown.Item>
         </NavDropdown>
       </Container>
     </Navbar>
