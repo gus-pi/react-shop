@@ -92,6 +92,17 @@ function Home() {
     setFilterParams({ ...filterParams, category: category });
   }
 
+  function handleSort(e: any) {
+    let val = e.target.value;
+    if (val === '0') {
+      setSortColumn({ column: 'id', orderBy: 'desc' });
+    } else if (val === '1') {
+      setSortColumn({ column: 'price', orderBy: 'asc' });
+    } else if (val === '2') {
+      setSortColumn({ column: 'price', orderBy: 'desc' });
+    }
+  }
+
   return (
     <>
       <div style={{ backgroundColor: '#08618d', minHeight: '200px' }}>
@@ -140,7 +151,7 @@ function Home() {
               </select>
             </div>
             <div className="col-md-2">
-              <select className="form-select">
+              <select className="form-select" onChange={handleSort}>
                 <option value="0">Order By Newest</option>
                 <option value="1">Price: Low to High</option>
                 <option value="2">Price: High to Low</option>
